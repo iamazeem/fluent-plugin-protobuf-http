@@ -8,6 +8,7 @@
 * **Incoming Message Format**: Support for binary or JSON format (`Content-Type`: `application/octet-stream` or `application/json`)
 * **Outgoing Message Format**: Support for binary or JSON format
 * **Message Types**: Single or Batch
+* **TLS Support**: Use `<transport tls> ... </transport>` section in configuration and `https://` URL protocol prefix. See this [example](https://docs.fluentd.org/plugin-helper-overview/api-plugin-helper-server#configuration-example) for more details.
 
 ## Installation
 
@@ -43,6 +44,13 @@ $ bundle
   * Available values: binary, json
   * Default value: `binary`.
 * **tag** (string) (required): The tag for the event.
+
+### \<transport\> section (optional) (single)
+
+* **protocol** (enum) (optional):
+  * Available values: tcp, tls
+  * Default value: `tcp`.
+  * See [example](https://docs.fluentd.org/plugin-helper-overview/api-plugin-helper-server#configuration-example).
 
 ### Example
 

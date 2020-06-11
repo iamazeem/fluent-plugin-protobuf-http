@@ -42,6 +42,10 @@ module Fluent
       desc 'The tag for the event.'
       config_param :tag, :string
 
+      config_section :transport, required: false, multi: false, init: true, param_name: :transport_config do
+        config_argument :protocol, :enum, list: %i[tcp tls], default: :tcp
+      end
+
       def initialize
         super
 
@@ -136,9 +140,18 @@ module Fluent
         compile_protos
         populate_msgclass_lookup
 
-        log.info("Starting protobuf server [#{@bind}:#{@port}]...")
+        # TLS check
+        proto = :tcp
+        tls_opts = nil
+        if @transport_config && @transport_config.protocol == :tls
+          proto = :tls
+          tls_opts = @transport_config.to_h
+        end
 
-        http_server_create_http_server(:protobuf_server, addr: @bind, port: @port, logger: log) do |server|
+        log.info("Starting protobuf #{proto == :tcp ? 'HTTP' : 'HTTPS'} server [#{@bind}:#{@port}]...")
+        log.debug("TLS configuration:\n#{tls_opts}") if tls_opts
+
+        http_server_create_http_server(:protobuf_server, addr: @bind, port: @port, logger: log, proto: proto, tls_opts: tls_opts) do |server|
           server.post("/#{tag}") do |req|
             peeraddr = "#{req.peeraddr[2]}:#{req.peeraddr[1]}".freeze # ip:port
             serialized_msg = req.body.freeze
