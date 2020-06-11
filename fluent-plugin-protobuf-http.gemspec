@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.email          = ['azeem.sajid@gmail.com']
 
   spec.summary        = 'fluentd HTTP Input Plugin for Protocol Buffers'
-  spec.description    = 'fluentd HTTP Input Plugin for Protocol Buffers with Single and Batch Messages Support]'
+  spec.description    = 'fluentd HTTP Input Plugin for Protocol Buffers with Single and Batch Messages Support'
   spec.homepage       = 'https://github.com/iamAzeem/fluent-plugin-protobuf-http'
   spec.license        = 'Apache-2.0'
 
