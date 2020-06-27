@@ -1,5 +1,8 @@
 # fluent-plugin-protobuf-http
 
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache-blue.svg?style=flat-square)](https://github.com/iamAzeem/fluent-plugin-protobuf-http/blob/master/LICENSE)
+[![RubyGems Downloads](https://img.shields.io/gem/dt/fluent-plugin-protobuf-http?color=blue&style=flat-square&label=Downloads)](https://rubygems.org/gems/fluent-plugin-protobuf-http)
+
 [Fluentd](https://fluentd.org/) HTTP input plugin for Protocol Buffers.
 
 ## Features
