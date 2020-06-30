@@ -81,7 +81,7 @@ The logging of events is assumed to be the prime use-case for this plugin.
 So, use self-contained `.proto` file(s) that don't import other custom `.proto` file(s).  
 The `package` and `message` names must be unique and are treated as case-sensitive.
 
-Consider this [`log.proto`](https://github.com/iamAzeem/protobuf-log-sample/blob/master/log.proto) schema:
+Consider this [`log.proto`](https://github.com/iamAzeem/protobuf-log-sample/blob/master/log.proto) schema from [protobuf-log-sample](https://github.com/iamAzeem/protobuf-log-sample) repo:
 ```
 syntax = "proto3";
 
@@ -174,8 +174,9 @@ The `type` will indicate the message type of `batch` i.e. `Log` in this example.
 The type of `Batch` is `service.logging.Batch` and it will be the value of `msgtype` in the URL query.  
 The type of `batch` array is `service.logging.Log` and it will be the value of `type`.
 
-The `google.protobuf.Any` type has not been used deliberately here.  
-It stores message type information with each message resulting in increase in size.  
+The `google.protobuf.Any` type has not been used here deliberately.  
+It stores the message type with each message resulting in an increase in size.  
+Refer to [protobuf-repeated-type-vs-any](https://github.com/iamAzeem/protobuf-repeated-type-vs-any) for a simple comparison.  
 With the above approach, the type is stored only once for the whole batch.
 
 ### Endpoint (URL)
