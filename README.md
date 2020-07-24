@@ -7,11 +7,15 @@
 
 ## Features
 
-* **ProtoBuf Schemas**: Automatic compilation of `.proto` files located in `proto_dir`
-* **Incoming Message Format**: Support for binary or JSON format (`Content-Type`: `application/octet-stream` or `application/json`)
-* **Outgoing Message Format**: Support for binary or JSON format
-* **Message Types**: Single or Batch
-* **TLS Support**: Use `<transport tls> ... </transport>` section in configuration and `https://` URL protocol prefix. See this [example](https://docs.fluentd.org/plugin-helper-overview/api-plugin-helper-server#configuration-example) for more details.
+* Automatic compilation of `.proto` files located in `proto_dir`
+* Incoming Format: Binary or JSON (`Content-Type`: `application/octet-stream` or
+  `application/json`)
+* Outgoing Format: Binary or JSON
+* Single and Batch message support
+* TLS Support with `<transport>` section and `https://` URL protocol prefix.
+
+For more details on TLS configuration, see this official
+[example](https://docs.fluentd.org/plugin-helper-overview/api-plugin-helper-server#configuration-example).
 
 ## Installation
 
@@ -35,31 +39,32 @@ $ bundle
 
 ## Configuration
 
-* **bind** (string) (optional): The address to listen to.
-  * Default value: `0.0.0.0`.
-* **port** (integer) (optional): The port to listen to.
-  * Default value: `8080`.
-* **proto_dir** (string) (required): The directory path that contains the .proto files.
-* **in_mode** (enum) (optional): The mode of incoming (supported) events.
-  * Available values: binary, json
-  * Default value: `binary`.
-* **out_mode** (enum) (optional): The mode of outgoing (emitted) events.
-  * Available values: binary, json
-  * Default value: `binary`.
-* **tag** (string) (required): The tag for the event.
+* `bind` (string) (optional): The address to listen to.
+  * Default: `0.0.0.0`
+* `port` (integer) (optional): The port to listen to.
+  * Default: `8080`
+* `proto_dir` (string) (required): The directory path that contains the .proto files.
+* `in_mode` (enum) (optional): The mode of incoming (supported) events.
+  * Modes: `binary`, `json`
+  * Default: `binary`
+* `out_mode` (enum) (optional): The mode of outgoing (emitted) events.
+  * Modes: `binary`, `json`
+  * Default: `binary`
+* `tag` (string) (required): The tag for the event.
 
-### \<transport\> section (optional) (single)
+### `<transport>` section (optional) (single)
 
-* **protocol** (enum) (optional):
-  * Available values: tcp, tls
-  * Default value: `tcp`.
-  * See [example](https://docs.fluentd.org/plugin-helper-overview/api-plugin-helper-server#configuration-example).
+* `protocol` (enum) (optional):
+  * Protocols: `tcp`, `tls`
+  * Default: `tcp`
+  * For more details, see this official [configuration example](https://docs.fluentd.org/plugin-helper-overview/api-plugin-helper-server#configuration-example).
 
 ### Example
 
 ```
-# Single Message: http://ip:port/<tag>?msgtype=<msgtype>
-# Batch  Message: http://ip:port/<tag>?msgtype=<batch-msgtype>?batch=true
+# Endpoints:
+# - Single Message: http://ip:port/<tag>?msgtype=<msgtype>
+# - Batch  Message: http://ip:port/<tag>?msgtype=<batch-msgtype>?batch=true
 
 <source>
   @type       protobuf_http
@@ -77,11 +82,13 @@ $ bundle
 
 ## Schemas (`.proto` files)
 
-The logging of events is assumed to be the prime use-case for this plugin.  
-So, use self-contained `.proto` file(s) that don't import other custom `.proto` file(s).  
-The `package` and `message` names must be unique and are treated as case-sensitive.
+The prime use-case for this plugin is assumed to be event logging. So, always
+use self-contained `.proto` file(s) that do not import other `.proto` files. The
+names e.g. `package`, `message`, etc. must be unique and are treated as
+case-sensitive.
 
-Consider this [`log.proto`](https://github.com/iamAzeem/protobuf-log-sample/blob/master/log.proto) schema from [protobuf-log-sample](https://github.com/iamAzeem/protobuf-log-sample) repo:
+Consider this [`log.proto`](https://github.com/iamAzeem/protobuf-log-sample/blob/master/log.proto) schema from [protobuf-log-sample](https://github.com/iamAzeem/protobuf-log-sample) repository:
+
 ```
 syntax = "proto3";
 
@@ -111,9 +118,9 @@ message Log {
 }
 ```
 
-The fully-qualified message type for `Log` will be `service.logging.Log`.  
-This message type is used as the value of `msgtype` query parameter in the URL.  
-See URL section below for more on `msgtype`.
+The fully-qualified message type for `Log` is `service.logging.Log`. This
+message type is used as the value of `msgtype` query parameter in the URL. See
+URL section below for more on `msgtype`.
 
 ### Single Message
 
@@ -121,7 +128,8 @@ The above schema will be used as-is for the single message.
 
 ### Batch Message
 
-For a batch, the schema must be like this:
+For the batch message, the schema must be like this:
+
 ```
 message Batch {
   string type = 1;
@@ -129,11 +137,11 @@ message Batch {
 }
 ```
 
-IMPORTANT:
-The `Batch` message type is part of `log.proto`, it's not a separate file!  
-You can choose any name for a batch message type.
+IMPORTANT: The `Batch` message type is part of `log.proto`, it is not a separate
+file! You can choose any name for a batch message type.
 
-The complete `log.proto` will be:
+Here is the complete `log.proto` file:
+
 ```
 syntax = "proto3";
 
@@ -168,16 +176,18 @@ message Batch {
 }
 ```
 
-For batch processing, the plugin looks for special members `type` and `batch`.  
+For batch processing, the plugin looks for special members `type` and `batch`.
 The `type` will indicate the message type of `batch` i.e. `Log` in this example.
 
-The type of `Batch` is `service.logging.Batch` and it will be the value of `msgtype` in the URL query.  
-The type of `batch` array is `service.logging.Log` and it will be the value of `type`.
+The type of `Batch` is `service.logging.Batch` and it will be the value of
+`msgtype` in the URL query. The type of `batch` array is `service.logging.Log`
+and it will be the value of `type`.
 
-The `google.protobuf.Any` type has not been used here deliberately.  
-It stores the message type with each message resulting in an increase in size.  
-Refer to [protobuf-repeated-type-vs-any](https://github.com/iamAzeem/protobuf-repeated-type-vs-any) for a simple comparison.  
-With the above approach, the type is stored only once for the whole batch.
+The `google.protobuf.Any` type has not been used here deliberately. It stores
+the message type with each message resulting in an increase in size. Refer to
+[protobuf-repeated-type-vs-any](https://github.com/iamAzeem/protobuf-repeated-type-vs-any)
+for a simple comparison. With the above approach, the type is stored only once
+for the whole batch.
 
 ### Endpoint (URL)
 
@@ -191,27 +201,34 @@ For batch message:
 http://<ip>:<port>/<tag>?msgtype=<fully-qualified-message-type-for-batch>&batch=true
 ```
 
-Without `batch=true` query parameter, the batch will be treated as a single message.
+Without `batch=true` query parameter, the batch will be treated as a single
+message.
 
-For example, for a log type `service.logging.Log` and its corresponding batch type `service.logging.Batch`:
+For example, for a log type `service.logging.Log` and its corresponding batch
+type `service.logging.Batch`, the URLs would be:
 
-Single:
+For single message:
+
 ```
 http://localhost:8080/debug.test?msgtype=service.logging.Log
 ```
 
-Batch:
+For batch message:
+
 ```
 http://localhost:8080/debug.test?msgtype=service.logging.Batch&batch=true
 ```
 
-**NOTE**: The values of query parameters (`msgtype`, `batch`) are case-sensitive!
+**NOTE**: The values of query parameters (`msgtype`, `batch`) are
+case-sensitive!
 
 ## Test Use-Case (`curl`)
 
-For a simple test use-case of events and their routing to [stdout](https://docs.fluentd.org/output/stdout) can be configured like this:
+For a simple use-case of incoming HTTP events and their routing to
+[stdout](https://docs.fluentd.org/output/stdout) may be configured like this:
 
 `fluent.conf`:
+
 ```
 <source>
   @type       protobuf_http
@@ -236,16 +253,27 @@ The incoming binary messages will be transformed to JSON for further consumption
 
 #### Single Message
 
-Test Input Parameters:
-* data: `log.bin`, msgtype: `service.logging.Log`
+Test Parameters:
 
-Command:
+| input file | single message type   |
+|:----------:|:---------------------:|
+| `log.bin`  | `service.logging.Log` |
+
+URL:
+
+```bash
+http://localhost:8080/debug.test?msgtype=service.logging.Log
 ```
+
+`curl` command:
+
+```bash
 $ curl -X POST -H "Content-Type: application/octet-stream" --data-binary "@/<path>/log.bin" "http://localhost:8080/debug.test?msgtype=service.logging.Log"
 ```
 
-`fluentd` Logs (Observe JSON at the end):
-```
+`fluentd` logs (Observe JSON at the end):
+
+```text
 2020-06-09 18:53:47 +0500 [info]: #0 [protobuf_http_input] [R] {binary} [127.0.0.1:41222, size: 86 bytes]
 2020-06-09 18:53:47 +0500 [warn]: #0 [protobuf_http_input] 'batch' not found in 'query_string' [msgtype=service.logging.Log]
 2020-06-09 18:53:47 +0500 [info]: #0 [protobuf_http_input] [S] {binary} [127.0.0.1:41222, msgtype: service.logging.Log, size: 86 bytes]
@@ -253,22 +281,35 @@ $ curl -X POST -H "Content-Type: application/octet-stream" --data-binary "@/<pat
 2020-06-09 18:53:47 +0500 [info]: #0 [protobuf_http_input] [S] {json} [127.0.0.1:41222, msgtype: service.logging.Log, size: 183 bytes]
 ```
 
-For Test Single Message Generation: https://github.com/iamAzeem/protobuf-log-sample
+For sample Single message generation, see [this](https://github.com/iamAzeem/protobuf-log-sample).
 
 #### Batch Message
 
-Test Input Parameters:
-* data: `logbatch2.bin`, msgtype: `service.logging.Batch`, type: `service.logging.Log` [batch_size: 2 messages]
-* data: `logbatch5.bin`, msgtype: `service.logging.Batch`, type: `service.logging.Log` [batch_size: 5 messages]
+Test Parameters:
 
-Command (`logbatch2.bin`):
+| input file      | batch message type      | batch internal type   | messages |
+|:---------------:|:-----------------------:|:---------------------:|:--------:|
+| `logbatch2.bin` | `service.logging.Batch` | `service.logging.Log` | 2        |
+| `logbatch5.bin` | `service.logging.Batch` | `service.logging.Log` | 5        |
+
+URL:
+
+```text
+http://localhost:8080/debug.test?msgtype=service.logging.Batch&batch=true
 ```
+
+**`logbatch2.bin`**
+
+`curl` command:
+
+```bash
 $ curl -X POST -H "Content-Type: application/octet-stream" --data-binary "@/<path>/logbatch2.bin" "http://localhost:8080/debug.test?msgtype=service.logging.Batch&batch=true"
 {"status":"Batch received! [batch_type: service.logging.Log, batch_size: 2 messages]"}
 ```
 
-`fluentd` Logs:
-```
+`fluentd` logs:
+
+```text
 2020-06-09 19:04:13 +0500 [info]: #0 [protobuf_http_input] [R] {binary} [127.0.0.1:41416, size: 207 bytes]
 2020-06-09 19:04:13 +0500 [info]: #0 [protobuf_http_input] [B] {binary} [127.0.0.1:41416, msgtype: service.logging.Batch, size: 207 bytes]
 2020-06-09 19:04:13 +0500 [info]: #0 [protobuf_http_input] [B] Emitting message stream/batch [batch_size: 2 messages]...
@@ -277,14 +318,18 @@ $ curl -X POST -H "Content-Type: application/octet-stream" --data-binary "@/<pat
 2020-06-09 19:04:13 +0500 [info]: #0 [protobuf_http_input] [B] {json} [127.0.0.1:41416, msgtype: service.logging.Batch] Batch received! [batch_type: service.logging.Log, batch_size: 2 messages]
 ```
 
-Command (`logbatch5.bin`):
-```
+**`logbatch5.bin`**
+
+`curl` command:
+
+```bash
 $ curl -X POST -H "Content-Type: application/octet-stream" --data-binary "@/<path>/logbatch5.bin" "http://localhost:8080/debug.test?msgtype=service.logging.Batch&batch=true"
 {"status":"Batch received! [batch_type: service.logging.Log, batch_size: 5 messages]"}
 ```
 
-`fluentd` Logs:
-```
+`fluentd` logs:
+
+```text
 2020-06-09 19:07:09 +0500 [info]: #0 [protobuf_http_input] [R] {binary} [127.0.0.1:41552, size: 486 bytes]
 2020-06-09 19:07:09 +0500 [info]: #0 [protobuf_http_input] [B] {binary} [127.0.0.1:41552, msgtype: service.logging.Batch, size: 486 bytes]
 2020-06-09 19:07:09 +0500 [info]: #0 [protobuf_http_input] [B] Emitting message stream/batch [batch_size: 5 messages]...
@@ -296,10 +341,10 @@ $ curl -X POST -H "Content-Type: application/octet-stream" --data-binary "@/<pat
 2020-06-09 19:07:09 +0500 [info]: #0 [protobuf_http_input] [B] {json} [127.0.0.1:41552, msgtype: service.logging.Batch] Batch received! [batch_type: service.logging.Log, batch_size: 5 messages]
 ```
 
-For Test Batch Message Generation: https://gist.github.com/iamAzeem/a8a24092132e1741a76956192f2104cc
+For sample Batch message generation, see [this](https://gist.github.com/iamAzeem/a8a24092132e1741a76956192f2104cc).
 
 ## Copyright
 
-* Copyright&copy; 2020 [Azeem Sajid](https://www.linkedin.com/in/az33msajid/)
+* Copyright &copy; 2020 [Azeem Sajid](https://www.linkedin.com/in/az33msajid/)
 * License
   * Apache License, Version 2.0
