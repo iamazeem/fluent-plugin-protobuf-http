@@ -1,7 +1,13 @@
 # fluent-plugin-protobuf-http
 
-[![License: Apache-2.0](https://img.shields.io/badge/License-Apache-blue.svg?style=flat-square)](https://github.com/iamAzeem/fluent-plugin-protobuf-http/blob/master/LICENSE)
-[![RubyGems Downloads](https://img.shields.io/gem/dt/fluent-plugin-protobuf-http?color=blue&style=flat-square&label=Downloads)](https://rubygems.org/gems/fluent-plugin-protobuf-http)
+[![License: Apache](https://img.shields.io/badge/license-Apache-blue.svg?style=flat-square)](https://github.com/iamAzeem/fluent-plugin-protobuf-http/blob/master/LICENSE)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/iamAzeem/fluent-plugin-protobuf-http?style=flat-square)
+[![RubyGems Downloads](https://img.shields.io/gem/dt/fluent-plugin-protobuf-http?color=blue&style=flat-square)](https://rubygems.org/gems/fluent-plugin-protobuf-http)
+
+![Lines of code](https://img.shields.io/tokei/lines/github/iamAzeem/fluent-plugin-protobuf-http?label=LOC&style=flat-square)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/iamAzeem/fluent-plugin-protobuf-http?style=flat-square)
+![GitHub repo size](https://img.shields.io/github/repo-size/iamAzeem/fluent-plugin-protobuf-http?style=flat-square)
+
 
 [Fluentd](https://fluentd.org/) HTTP input plugin for Protocol Buffers.
 
