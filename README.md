@@ -349,8 +349,6 @@ $ curl -X POST -H "Content-Type: application/octet-stream" --data-binary "@/<pat
 
 For sample Batch message generation, see [this](https://gist.github.com/iamAzeem/a8a24092132e1741a76956192f2104cc).
 
-## Copyright
+## License
 
-* Copyright &copy; 2020 [Azeem Sajid](https://www.linkedin.com/in/az33msajid/)
-* License
-  * Apache License, Version 2.0
+[Apache 2.0](LICENSE)
