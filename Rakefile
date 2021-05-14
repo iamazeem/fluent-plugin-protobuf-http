@@ -1,3 +1,5 @@
+# frozen-string-literal: true
+
 require 'bundler'
 Bundler::GemHelper.install_tasks
 

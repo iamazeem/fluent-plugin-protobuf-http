@@ -1,12 +1,14 @@
-require "helper"
-require "fluent/plugin/in_protobuf_http.rb"
+# frozen-string-literal: true
+
+require 'helper'
+require 'fluent/plugin/in_protobuf_http'
 
 class ProtobufHttpInputTest < Test::Unit::TestCase
   setup do
     Fluent::Test.setup
   end
 
-  test "failure" do
+  test 'failure' do
     flunk
   end
 

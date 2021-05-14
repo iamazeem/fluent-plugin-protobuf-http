@@ -1,3 +1,5 @@
+# frozen-string-literal: true
+
 #
 # Copyright 2020 Azeem Sajid
 #
@@ -18,9 +20,11 @@ require 'fluent/config/error'
 require 'fluent/plugin_helper/http_server'
 require 'webrick/httputils'
 require 'json'
+require 'English'
 
 module Fluent
   module Plugin
+    # Implementation of HTTP input plugin for Protobuf
     class ProtobufHttpInput < Fluent::Plugin::Input
       Fluent::Plugin.register_input('protobuf_http', self)
 
@@ -57,16 +61,16 @@ module Fluent
       def compile_protos
         log.debug("Checking proto_dir [#{@proto_dir}]...")
 
-        path = File.expand_path(@proto_dir).freeze
+        path = File.expand_path(@proto_dir)
         raise Fluent::ConfigError, "protos_dir does not exist! [#{path}]" unless Dir.exist?(path)
 
-        @protos = Dir["#{path}/*.proto"].freeze
+        @protos = Dir["#{path}/*.proto"]
         raise Fluent::ConfigError, "Empty proto_dir! [#{path}]" unless @protos.any?
 
         log.info("Compiling .proto files [#{@protos.length}]...")
 
         `protoc --ruby_out=#{path} --proto_path=#{path} #{path}/*.proto`
-        raise Fluent::ConfigError, 'Could not compile! See error(s) above.' unless $?.success?
+        raise Fluent::ConfigError, 'Could not compile! See error(s) above.' unless $CHILD_STATUS.success?
 
         log.info("Compiled successfully:\n- #{@protos.join("\n- ")}")
 
@@ -78,8 +82,8 @@ module Fluent
       end
 
       def get_compiled_proto(proto)
-        proto_suffix = '.proto'.freeze
-        compiled_proto_suffix = '_pb.rb'.freeze
+        proto_suffix = '.proto'
+        compiled_proto_suffix = '_pb.rb'
 
         compiled_proto = proto.chomp(proto_suffix) + compiled_proto_suffix
         raise Fluent::ConfigError, "Compiled proto not found! [#{compiled_proto}]" unless File.file?(compiled_proto)
@@ -113,7 +117,7 @@ module Fluent
         msg_types = []
         File.foreach(compiled_proto) do |line|
           if line.lstrip.start_with?('add_message')
-            msg_type = line[/"([^"]*)"/, 1].freeze # regex: <add_message> 'msg_type' <do>
+            msg_type = line[/"([^"]*)"/, 1] # regex: <add_message> 'msg_type' <do>
             msg_types.push(msg_type) unless msg_type.nil?
           end
         end
@@ -153,8 +157,8 @@ module Fluent
 
         http_server_create_http_server(:protobuf_server, addr: @bind, port: @port, logger: log, proto: proto, tls_opts: tls_opts) do |server|
           server.post("/#{tag}") do |req|
-            peeraddr = "#{req.peeraddr[2]}:#{req.peeraddr[1]}".freeze # ip:port
-            serialized_msg = req.body.freeze
+            peeraddr = "#{req.peeraddr[2]}:#{req.peeraddr[1]}" # ip:port
+            serialized_msg = req.body
 
             log.info("[R] {#{@in_mode}} [#{peeraddr}, size: #{serialized_msg.length} bytes]")
             log.debug("Dumping serialized message [#{serialized_msg.length} bytes]:\n#{serialized_msg}")
@@ -162,7 +166,7 @@ module Fluent
             content_type = req.header['content-type'][0]
 
             unless valid_content_type?(content_type)
-              status = "Invalid 'Content-Type' header! [#{content_type}]".freeze
+              status = "Invalid 'Content-Type' header! [#{content_type}]"
               log.warn("[X] Message rejected! [#{peeraddr}] #{status}")
               next [400, { 'Content-Type' => 'application/json', 'Connection' => 'close' }, { 'status' => status }.to_json]
             end
@@ -171,7 +175,7 @@ module Fluent
 
             msgtype, batch = get_query_params(req.query_string)
             unless @msgclass_lookup.key?(msgtype)
-              status = "Invalid 'msgtype' in 'query_string'! [#{msgtype}]".freeze
+              status = "Invalid 'msgtype' in 'query_string'! [#{msgtype}]"
               log.warn("[X] Message rejected! [#{peeraddr}] #{status}")
               next [400, { 'Content-Type' => 'application/json', 'Connection' => 'close' }, { 'status' => status }.to_json]
             end
@@ -181,7 +185,7 @@ module Fluent
             deserialized_msg = deserialize_msg(msgtype, serialized_msg)
 
             if deserialized_msg.nil?
-              status = "Incompatible message! [msgtype: #{msgtype}, size: #{serialized_msg.length} bytes]".freeze
+              status = "Incompatible message! [msgtype: #{msgtype}, size: #{serialized_msg.length} bytes]"
               log.warn("[X] Message rejected! [#{peeraddr}] #{status}")
               next [400, { 'Content-Type' => 'application/json', 'Connection' => 'close' }, { 'status' => status }.to_json]
             end
@@ -208,7 +212,7 @@ module Fluent
             log.info("[B] {#{@in_mode}} [#{peeraddr}, msgtype: #{msgtype}, size: #{serialized_msg.length} bytes]")
 
             if deserialized_msg.type.nil? || deserialized_msg.batch.nil? || deserialized_msg.batch.empty?
-              status = "Invalid 'batch' message! [msgtype: #{msgtype}, size: #{serialized_msg.length} bytes]".freeze
+              status = "Invalid 'batch' message! [msgtype: #{msgtype}, size: #{serialized_msg.length} bytes]"
               log.warn("[X] Message rejected! [#{peeraddr}] #{status}")
               next [400, { 'Content-Type' => 'application/json', 'Connection' => 'close' }, { 'status' => status }.to_json]
             end
@@ -228,7 +232,7 @@ module Fluent
 
             router.emit_stream(@tag, stream)
 
-            status = "Batch received! [batch_type: #{batch_type}, batch_size: #{batch_size} messages]".freeze
+            status = "Batch received! [batch_type: #{batch_type}, batch_size: #{batch_size} messages]"
             log.info("[B] {#{@out_mode}} [#{peeraddr}, msgtype: #{msgtype}] #{status}")
             [200, { 'Content-Type' => 'application/json', 'Connection' => 'close' }, { 'status' => status }.to_json]
           end
@@ -236,8 +240,8 @@ module Fluent
       end
 
       def valid_content_type?(content_type)
-        hdr_binary = 'application/octet-stream'.freeze
-        hdr_json = 'application/json'.freeze
+        hdr_binary = 'application/octet-stream'
+        hdr_json = 'application/json'
 
         case @in_mode
         when :binary
@@ -278,7 +282,7 @@ module Fluent
         rescue Google::Protobuf::ParseError => e
           log.error("Incompatible message! [msgtype: #{msgtype}, size: #{serialized_msg.length} bytes] #{e}")
           nil
-        rescue => e
+        rescue StandardError => e
           log.error("Deserializaton failed! Error: #{e}")
           nil
         end
@@ -294,7 +298,7 @@ module Fluent
           when :json
             msgclass.encode_json(deserialized_msg)
           end
-        rescue => e
+        rescue StandardError => e
           log.error("Serialization failed! [msgtype: #{msgtype}, msg: #{deserialized_msg}] Error: #{e}")
           nil
         end
