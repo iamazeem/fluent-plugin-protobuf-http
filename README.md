@@ -8,7 +8,6 @@
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/iamAzeem/fluent-plugin-protobuf-http?style=flat-square)
 ![GitHub repo size](https://img.shields.io/github/repo-size/iamAzeem/fluent-plugin-protobuf-http?style=flat-square)
 
-
 [Fluentd](https://fluentd.org/) HTTP input plugin for Protocol Buffers.
 
 ## Features
@@ -27,20 +26,22 @@ For more details on TLS configuration, see this official
 
 ### RubyGems
 
-```
-$ gem install fluent-plugin-protobuf-http
+```shell
+gem install fluent-plugin-protobuf-http
 ```
 
 ### Bundler
 
 Add following line to your Gemfile:
+
 ```ruby
-gem "fluent-plugin-protobuf-http"
+gem 'fluent-plugin-protobuf-http'
 ```
 
 And then execute:
-```
-$ bundle
+
+```shell
+bundle
 ```
 
 ## Configuration
@@ -63,11 +64,12 @@ $ bundle
 * `protocol` (enum) (optional):
   * Protocols: `tcp`, `tls`
   * Default: `tcp`
-  * For more details, see this official [configuration example](https://docs.fluentd.org/plugin-helper-overview/api-plugin-helper-server#configuration-example).
+  * For more details, see this official configuration
+    [example](https://docs.fluentd.org/plugin-helper-overview/api-plugin-helper-server#configuration-example).
 
 ### Example
 
-```
+```text
 # Endpoints:
 # - Single Message: http://ip:port/<tag>?msgtype=<msgtype>
 # - Batch  Message: http://ip:port/<tag>?msgtype=<batch-msgtype>?batch=true
@@ -93,9 +95,13 @@ use self-contained `.proto` file(s) that do not import other `.proto` files. The
 names e.g. `package`, `message`, etc. must be unique and are treated as
 case-sensitive.
 
-Consider this [`log.proto`](https://github.com/iamAzeem/protobuf-log-sample/blob/master/log.proto) schema from [protobuf-log-sample](https://github.com/iamAzeem/protobuf-log-sample) repository:
+Consider this
+[log.proto](https://github.com/iamAzeem/protobuf-log-sample/blob/master/log.proto)
+schema from
+[protobuf-log-sample](https://github.com/iamAzeem/protobuf-log-sample)
+repository:
 
-```
+```protobuf
 syntax = "proto3";
 
 package service.logging;
@@ -136,7 +142,7 @@ The above schema will be used as-is for the single message.
 
 For the batch message, the schema must be like this:
 
-```
+```protobuf
 message Batch {
   string type = 1;
   repeated Log batch = 2;
@@ -148,7 +154,7 @@ file! You can choose any name for a batch message type.
 
 Here is the complete `log.proto` file:
 
-```
+```protobuf
 syntax = "proto3";
 
 package service.logging;
@@ -198,12 +204,14 @@ for the whole batch.
 ### Endpoint (URL)
 
 For single message:
-```
+
+```text
 http://<ip>:<port>/<tag>?msgtype=<fully-qualified-message-type>
 ```
 
 For batch message:
-```
+
+```text
 http://<ip>:<port>/<tag>?msgtype=<fully-qualified-message-type-for-batch>&batch=true
 ```
 
@@ -215,13 +223,13 @@ type `service.logging.Batch`, the URLs would be:
 
 For single message:
 
-```
+```text
 http://localhost:8080/debug.test?msgtype=service.logging.Log
 ```
 
 For batch message:
 
-```
+```text
 http://localhost:8080/debug.test?msgtype=service.logging.Batch&batch=true
 ```
 
@@ -235,7 +243,7 @@ For a simple use-case of incoming HTTP events and their routing to
 
 `fluent.conf`:
 
-```
+```text
 <source>
   @type       protobuf_http
   @id         protobuf_http_input
@@ -251,13 +259,12 @@ For a simple use-case of incoming HTTP events and their routing to
 
 <match debug.test>
   @type       stdout
-  @id         stdout_output
 </match>
 ```
 
 The incoming binary messages will be transformed to JSON for further consumption.
 
-#### Single Message
+### Single Message
 
 Test Parameters:
 
@@ -273,8 +280,10 @@ http://localhost:8080/debug.test?msgtype=service.logging.Log
 
 `curl` command:
 
-```bash
-$ curl -X POST -H "Content-Type: application/octet-stream" --data-binary "@/<path>/log.bin" "http://localhost:8080/debug.test?msgtype=service.logging.Log"
+```shell
+curl -X POST -H "Content-Type: application/octet-stream" \
+    --data-binary "@/<path>/log.bin" \
+    "http://localhost:8080/debug.test?msgtype=service.logging.Log"
 ```
 
 `fluentd` logs (Observe JSON at the end):
@@ -287,9 +296,10 @@ $ curl -X POST -H "Content-Type: application/octet-stream" --data-binary "@/<pat
 2020-06-09 18:53:47 +0500 [info]: #0 [protobuf_http_input] [S] {json} [127.0.0.1:41222, msgtype: service.logging.Log, size: 183 bytes]
 ```
 
-For sample Single message generation, see [this](https://github.com/iamAzeem/protobuf-log-sample).
+For sample Single message generation, see
+[this](https://github.com/iamAzeem/protobuf-log-sample).
 
-#### Batch Message
+### Batch Message
 
 Test Parameters:
 
@@ -308,8 +318,10 @@ http://localhost:8080/debug.test?msgtype=service.logging.Batch&batch=true
 
 `curl` command:
 
-```bash
-$ curl -X POST -H "Content-Type: application/octet-stream" --data-binary "@/<path>/logbatch2.bin" "http://localhost:8080/debug.test?msgtype=service.logging.Batch&batch=true"
+```shell
+$ curl -X POST -H "Content-Type: application/octet-stream" \
+    --data-binary "@/<path>/logbatch2.bin" \
+    "http://localhost:8080/debug.test?msgtype=service.logging.Batch&batch=true"
 {"status":"Batch received! [batch_type: service.logging.Log, batch_size: 2 messages]"}
 ```
 
@@ -329,7 +341,9 @@ $ curl -X POST -H "Content-Type: application/octet-stream" --data-binary "@/<pat
 `curl` command:
 
 ```bash
-$ curl -X POST -H "Content-Type: application/octet-stream" --data-binary "@/<path>/logbatch5.bin" "http://localhost:8080/debug.test?msgtype=service.logging.Batch&batch=true"
+$ curl -X POST -H "Content-Type: application/octet-stream" \
+    --data-binary "@/<path>/logbatch5.bin" \
+    "http://localhost:8080/debug.test?msgtype=service.logging.Batch&batch=true"
 {"status":"Batch received! [batch_type: service.logging.Log, batch_size: 5 messages]"}
 ```
 
@@ -347,7 +361,18 @@ $ curl -X POST -H "Content-Type: application/octet-stream" --data-binary "@/<pat
 2020-06-09 19:07:09 +0500 [info]: #0 [protobuf_http_input] [B] {json} [127.0.0.1:41552, msgtype: service.logging.Batch] Batch received! [batch_type: service.logging.Log, batch_size: 5 messages]
 ```
 
-For sample Batch message generation, see [this](https://gist.github.com/iamAzeem/a8a24092132e1741a76956192f2104cc).
+For sample Batch message generation, see
+[this](https://gist.github.com/iamAzeem/a8a24092132e1741a76956192f2104cc).
+
+## Contribute
+
+- Fork the project.
+- Check out the latest `main` branch.
+- Create a feature or bugfix branch from `main`.
+- Commit and push your changes.
+- Make sure to add and run tests locally: `bundle exec rake test`.
+- Run `rubocop` locally and fix all the lint warnings.
+- Submit the PR.
 
 ## License
 
