@@ -1,5 +1,6 @@
 # fluent-plugin-protobuf-http
 
+[![ci](https://github.com/iamazeem/fluent-plugin-protobuf-http/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/iamazeem/fluent-plugin-protobuf-http/actions/workflows/ci.yml)
 [![License: Apache](https://img.shields.io/badge/license-Apache-blue.svg?style=flat-square)](https://github.com/iamAzeem/fluent-plugin-protobuf-http/blob/master/LICENSE)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/iamAzeem/fluent-plugin-protobuf-http?style=flat-square)
 [![RubyGems Downloads](https://img.shields.io/gem/dt/fluent-plugin-protobuf-http?color=blue&style=flat-square)](https://rubygems.org/gems/fluent-plugin-protobuf-http)
