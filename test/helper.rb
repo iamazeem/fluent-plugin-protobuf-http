@@ -1,5 +1,8 @@
 # frozen-string-literal: true
 
+require 'simplecov'
+SimpleCov.start
+
 $LOAD_PATH.unshift(File.expand_path('..', __dir__))
 require 'test-unit'
 require 'fluent/test'
