@@ -9,6 +9,27 @@
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/iamAzeem/fluent-plugin-protobuf-http?style=flat-square)
 ![GitHub repo size](https://img.shields.io/github/repo-size/iamAzeem/fluent-plugin-protobuf-http?style=flat-square)
 
+- [fluent-plugin-protobuf-http](#fluent-plugin-protobuf-http)
+  - [Overview](#overview)
+  - [Features](#features)
+  - [Installation](#installation)
+    - [RubyGems](#rubygems)
+    - [Bundler](#bundler)
+  - [Configuration](#configuration)
+    - [`<transport>` section (optional) (single)](#transport-section-optional-single)
+    - [Example](#example)
+  - [Schemas (`.proto` files)](#schemas-proto-files)
+    - [Single Message](#single-message)
+    - [Batch Message](#batch-message)
+    - [Endpoint (URL)](#endpoint-url)
+  - [Test Use-Case (`curl`)](#test-use-case-curl)
+    - [Single Message](#single-message-1)
+    - [Batch Message](#batch-message-1)
+  - [Contribute](#contribute)
+  - [License](#license)
+
+## Overview
+
 [Fluentd](https://fluentd.org/) HTTP input plugin for Protocol Buffers.
 
 ## Features
