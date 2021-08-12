@@ -1,3 +1,4 @@
+<!-- omit in toc -->
 # fluent-plugin-protobuf-http
 
 [![ci](https://github.com/iamazeem/fluent-plugin-protobuf-http/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/iamazeem/fluent-plugin-protobuf-http/actions/workflows/ci.yml)
@@ -9,24 +10,23 @@
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/iamAzeem/fluent-plugin-protobuf-http?style=flat-square)
 ![GitHub repo size](https://img.shields.io/github/repo-size/iamAzeem/fluent-plugin-protobuf-http?style=flat-square)
 
-- [fluent-plugin-protobuf-http](#fluent-plugin-protobuf-http)
-  - [Overview](#overview)
-  - [Features](#features)
-  - [Installation](#installation)
-    - [RubyGems](#rubygems)
-    - [Bundler](#bundler)
-  - [Configuration](#configuration)
-    - [`<transport>` section (optional) (single)](#transport-section-optional-single)
-    - [Example](#example)
-  - [Schemas (`.proto` files)](#schemas-proto-files)
-    - [Single Message](#single-message)
-    - [Batch Message](#batch-message)
-    - [Endpoint (URL)](#endpoint-url)
-  - [Test Use-Case (`curl`)](#test-use-case-curl)
-    - [Single Message](#single-message-1)
-    - [Batch Message](#batch-message-1)
-  - [Contribute](#contribute)
-  - [License](#license)
+- [Overview](#overview)
+- [Features](#features)
+- [Installation](#installation)
+  - [RubyGems](#rubygems)
+  - [Bundler](#bundler)
+- [Configuration](#configuration)
+  - [`<transport>` section (optional) (single)](#transport-section-optional-single)
+  - [Example](#example)
+- [Schemas (`.proto` files)](#schemas-proto-files)
+  - [Single Message](#single-message)
+  - [Batch Message](#batch-message)
+  - [Endpoint (URL)](#endpoint-url)
+- [Test Use-Case (`curl`)](#test-use-case-curl)
+  - [Single Message](#single-message-1)
+  - [Batch Message](#batch-message-1)
+- [Contribute](#contribute)
+- [License](#license)
 
 ## Overview
 
@@ -34,12 +34,12 @@
 
 ## Features
 
-* Automatic compilation of `.proto` files located in `proto_dir`
-* Incoming Format: Binary or JSON (`Content-Type`: `application/octet-stream` or
+- Automatic compilation of `.proto` files located in `proto_dir`
+- Incoming Format: Binary or JSON (`Content-Type`: `application/octet-stream` or
   `application/json`)
-* Outgoing Format: Binary or JSON
-* Single and Batch message support
-* TLS Support with `<transport>` section and `https://` URL protocol prefix.
+- Outgoing Format: Binary or JSON
+- Single and Batch message support
+- TLS Support with `<transport>` section and `https://` URL protocol prefix.
 
 For more details on TLS configuration, see this official
 [example](https://docs.fluentd.org/plugin-helper-overview/api-plugin-helper-server#configuration-example).
@@ -54,7 +54,7 @@ gem install fluent-plugin-protobuf-http
 
 ### Bundler
 
-Add following line to your Gemfile:
+Add the following line to your Gemfile:
 
 ```ruby
 gem 'fluent-plugin-protobuf-http'
@@ -68,25 +68,25 @@ bundle
 
 ## Configuration
 
-* `bind` (string) (optional): The address to listen to.
-  * Default: `0.0.0.0`
-* `port` (integer) (optional): The port to listen to.
-  * Default: `8080`
-* `proto_dir` (string) (required): The directory path that contains the .proto files.
-* `in_mode` (enum) (optional): The mode of incoming (supported) events.
-  * Modes: `binary`, `json`
-  * Default: `binary`
-* `out_mode` (enum) (optional): The mode of outgoing (emitted) events.
-  * Modes: `binary`, `json`
-  * Default: `binary`
-* `tag` (string) (required): The tag for the event.
+- `bind` (string) (optional): The address to listen to.
+  - Default: `0.0.0.0`
+- `port` (integer) (optional): The port to listen to.
+  - Default: `8080`
+- `proto_dir` (string) (required): The directory path that contains the .proto files.
+- `in_mode` (enum) (optional): The mode of incoming (supported) events.
+  - Modes: `binary`, `json`
+  - Default: `binary`
+- `out_mode` (enum) (optional): The mode of outgoing (emitted) events.
+  - Modes: `binary`, `json`
+  - Default: `binary`
+- `tag` (string) (required): The tag for the event.
 
 ### `<transport>` section (optional) (single)
 
-* `protocol` (enum) (optional):
-  * Protocols: `tcp`, `tls`
-  * Default: `tcp`
-  * For more details, see this official configuration
+- `protocol` (enum) (optional):
+  - Protocols: `tcp`, `tls`
+  - Default: `tcp`
+  - For more details, see this official configuration
     [example](https://docs.fluentd.org/plugin-helper-overview/api-plugin-helper-server#configuration-example).
 
 ### Example
@@ -171,8 +171,8 @@ message Batch {
 }
 ```
 
-IMPORTANT: The `Batch` message type is part of `log.proto`, it is not a separate
-file! You can choose any name for a batch message type.
+**IMPORTANT**: The `Batch` message type is part of `log.proto`, it is not a
+separate file! You can choose any name for a batch message type.
 
 Here is the complete `log.proto` file:
 
@@ -284,9 +284,9 @@ For a simple use-case of incoming HTTP events and their routing to
 </match>
 ```
 
-The incoming binary messages will be transformed to JSON for further consumption.
+The incoming binary messages will be converted to JSON for further consumption.
 
-### Single Message
+### Single Message Use-case
 
 Test Parameters:
 
@@ -318,10 +318,10 @@ curl -X POST -H "Content-Type: application/octet-stream" \
 2020-06-09 18:53:47 +0500 [info]: #0 [protobuf_http_input] [S] {json} [127.0.0.1:41222, msgtype: service.logging.Log, size: 183 bytes]
 ```
 
-For sample Single message generation, see
-[this](https://github.com/iamAzeem/protobuf-log-sample).
+For generating sample Single messages, see
+https://github.com/iamAzeem/protobuf-log-sample.
 
-### Batch Message
+### Batch Message Use-case
 
 Test Parameters:
 
@@ -384,7 +384,23 @@ $ curl -X POST -H "Content-Type: application/octet-stream" \
 ```
 
 For sample Batch message generation, see
-[this](https://gist.github.com/iamAzeem/a8a24092132e1741a76956192f2104cc).
+[this gist](https://gist.github.com/iamAzeem/a8a24092132e1741a76956192f2104cc).
+
+## CI Workflow
+
+The [CI workflow](ci..github/workflows/ci.yml) sets up the prerequisites. It
+builds and installs the plugin, and then runs the automated tests.
+
+To run tests locally, run:
+
+```shell
+bundle exec rake test
+```
+
+The [test](./test) directory contains the tests and the [input](./test/data)
+files.
+
+The code coverage is printed at the end using `simplecov`.
 
 ## Contribute
 
