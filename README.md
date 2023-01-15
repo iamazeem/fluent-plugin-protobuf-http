@@ -1,36 +1,15 @@
-<!-- omit in toc -->
 # fluent-plugin-protobuf-http
 
 [![ci](https://github.com/iamazeem/fluent-plugin-protobuf-http/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/iamazeem/fluent-plugin-protobuf-http/actions/workflows/ci.yml)
-[![License: Apache](https://img.shields.io/badge/license-Apache-blue.svg?style=flat-square)](https://github.com/iamAzeem/fluent-plugin-protobuf-http/blob/master/LICENSE)
+[![License: Apache](https://img.shields.io/badge/license-Apache-darkgreen.svg?style=flat-square)](https://github.com/iamAzeem/fluent-plugin-protobuf-http/blob/master/LICENSE)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/iamAzeem/fluent-plugin-protobuf-http?style=flat-square)
-[![RubyGems Downloads](https://img.shields.io/gem/dt/fluent-plugin-protobuf-http?color=blue&style=flat-square)](https://rubygems.org/gems/fluent-plugin-protobuf-http)
-
-![Lines of code](https://img.shields.io/tokei/lines/github/iamAzeem/fluent-plugin-protobuf-http?label=LOC&style=flat-square)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/iamAzeem/fluent-plugin-protobuf-http?style=flat-square)
-![GitHub repo size](https://img.shields.io/github/repo-size/iamAzeem/fluent-plugin-protobuf-http?style=flat-square)
-
-- [Overview](#overview)
-- [Features](#features)
-- [Installation](#installation)
-  - [RubyGems](#rubygems)
-  - [Bundler](#bundler)
-- [Configuration](#configuration)
-  - [`<transport>` section (optional) (single)](#transport-section-optional-single)
-  - [Example](#example)
-- [Schemas (`.proto` files)](#schemas-proto-files)
-  - [Single Message](#single-message)
-  - [Batch Message](#batch-message)
-  - [Endpoint (URL)](#endpoint-url)
-- [Test Use-Case (`curl`)](#test-use-case-curl)
-  - [Single Message](#single-message-1)
-  - [Batch Message](#batch-message-1)
-- [Contribute](#contribute)
-- [License](#license)
+[![RubyGems Downloads](https://img.shields.io/gem/dt/fluent-plugin-protobuf-http?style=flat-square)](https://rubygems.org/gems/fluent-plugin-protobuf-http)
+[![Buy Me a Coffee](https://img.shields.io/badge/Support-Buy%20Me%20A%20Coffee-orange.svg?style=flat-square)](https://www.buymeacoffee.com/iamazeem)
 
 ## Overview
 
-[Fluentd](https://fluentd.org/) HTTP input plugin for Protocol Buffers.
+[Fluentd](https://fluentd.org/) HTTP input plugin for
+[Protocol Buffers](https://github.com/protocolbuffers/protobuf).
 
 ## Features
 
@@ -404,12 +383,12 @@ The code coverage is printed at the end using `simplecov`.
 
 ## Contribute
 
-- Fork the project.
+- [Fork](https://github.com/iamazeem/fluent-plugin-protobuf-http/fork) the project.
 - Check out the latest `main` branch.
-- Create a feature or bugfix branch from `main`.
+- Create a `feature` or `bugfix` branch from `main`.
 - Commit and push your changes.
 - Make sure to add and run tests locally: `bundle exec rake test`.
-- Run `rubocop` locally and fix all the lint warnings.
+- Run [Rubocop](https://github.com/rubocop/rubocop) and fix the lint errors.
 - Submit the PR.
 
 ## License
