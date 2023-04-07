@@ -2,17 +2,15 @@ name: ci
 
 on:
   push:
-    paths-ignore:
-      - '**.md'
-      - '.rubocop.yml'
+    branches: [main]
+    paths-ignore: ['**.md', '.rubocop.yml']
   pull_request:
-    paths-ignore:
-      - '**.md'
-      - '.rubocop.yml'
+    branches: [main]
+    types: [opened, synchronize, reopened]
+    paths-ignore: ['**.md', '.rubocop.yml']
 
 jobs:
-  run-tests:
-    name: Run tests
+  build-and-test:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
@@ -21,24 +19,19 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-    - name: Checkout
+    - name: Checkout [${{ github.repository }}]
       uses: actions/checkout@v3
 
-    - name: Set up Ruby
+    - name: Set up Ruby ${{ matrix.ruby-version }}
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby-version }}
         bundler-cache: true
 
     - name: Install protoc
-      uses: arduino/setup-protoc@master
+      uses: arduino/setup-protoc@v1
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Bundle install
-      run: |
-        gem install bundler
-        bundle install --jobs 4 --retry 3
-
-    - name: Tests
+    - name: Run tests
       run: bundle exec rake test
