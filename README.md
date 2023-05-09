@@ -381,6 +381,19 @@ files.
 
 The code coverage is printed at the end using `simplecov`.
 
+## Known Issues
+
+- This plugin internally uses the HTTP server plugin
+  [helper](https://docs.fluentd.org/plugin-helper-overview/api-plugin-helper-http_server)
+  which has higher precedence for `async-http` over `webrick`. But,
+  [`webrick`](https://github.com/ruby/webrick) is required to run this. In an
+  environment where both are installed, `async-http` is automatically selected
+  causing runtime issues. To make this work, you need to uninstall `async-http`
+  i.e. `gem uninstall async-http`. See issue
+  [#10](https://github.com/iamazeem/fluent-plugin-protobuf-http/issues/10) for
+  more details where this was identified in Docker containers where both gems
+  were already installed.
+
 ## Contribute
 
 - [Fork](https://github.com/iamazeem/fluent-plugin-protobuf-http/fork) the project.
