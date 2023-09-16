@@ -116,9 +116,10 @@ module Fluent
         log.debug("Extracting message types [#{compiled_proto}]...")
         msg_types = []
         File.foreach(compiled_proto) do |line|
-          if line.lstrip.start_with?('add_message')
-            msg_type = line[/"([^"]*)"/, 1] # regex: <add_message> 'msg_type' <do>
-            msg_types.push(msg_type) unless msg_type.nil?
+          line.strip!
+          if line.include?('::Google::Protobuf::DescriptorPool.generated_pool.lookup') && line.end_with?('.msgclass')
+            extracted_msg_type = line[/"([^"]*)"/, 1].freeze
+            msg_types.push(extracted_msg_type) unless extracted_msg_type.nil?
           end
         end
 
