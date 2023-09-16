@@ -5,7 +5,8 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name           = 'fluent-plugin-protobuf-http'
-  spec.version        = '0.3.0'
+  spec.version        = '0.3.1'
+  spec.date           = '2023-09-16'
   spec.authors        = ['Azeem Sajid']
   spec.email          = ['azeem.sajid@gmail.com']
 
