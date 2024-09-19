@@ -4,7 +4,6 @@
 [![License: Apache](https://img.shields.io/badge/license-Apache-darkgreen.svg?style=flat-square)](https://github.com/iamAzeem/fluent-plugin-protobuf-http/blob/master/LICENSE)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/iamAzeem/fluent-plugin-protobuf-http?style=flat-square)
 [![RubyGems Downloads](https://img.shields.io/gem/dt/fluent-plugin-protobuf-http?style=flat-square)](https://rubygems.org/gems/fluent-plugin-protobuf-http)
-[![Buy Me a Coffee](https://img.shields.io/badge/Support-Buy%20Me%20A%20Coffee-orange.svg?style=flat-square)](https://www.buymeacoffee.com/iamazeem)
 
 ## Overview
 
