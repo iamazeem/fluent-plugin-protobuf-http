@@ -366,7 +366,7 @@ For sample Batch message generation, see
 
 ## CI Workflow
 
-The [CI workflow](ci..github/workflows/ci.yml) sets up the prerequisites. It
+The [CI workflow](.github/workflows/ci.yml) sets up the prerequisites. It
 builds and installs the plugin, and then runs the automated tests.
 
 To run tests locally, run:
